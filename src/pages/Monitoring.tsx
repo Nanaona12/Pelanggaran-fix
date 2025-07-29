@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient'; // ✅ Pastikan path-nya sesuai
+import { pelanggaran } from "@/lib/utils/constants";
 
 // UI Components
 import {
@@ -35,6 +36,7 @@ import { tentukanStatus, getStatusColor } from '@/lib/utils/helpers'; // Pastika
 import {
   hitungPoin,
   kelasList,
+  poinPerTipe,
   tingkatList,
   tipePelanggaran,
 } from '@/lib/utils/constants'; // Pastikan path benar
@@ -73,6 +75,43 @@ const Monitoring = () => {
   const [violationToDelete, setViolationToDelete] = useState<number | null>(
     null
   );
+  const [violationDetails, setViolationDetails] = useState<string[]>([]);
+  const [formData, setFormData] = useState({
+    studentName: '',
+    nis: '',
+    grade: '',
+    classLetter: '',
+    violationType: '',
+    date: '',
+    notes: '',
+    file: null as File | null,
+  });
+
+  const handleEdit = async () => {
+    if (!violationToEdit) return;
+  
+    const updatedData = {
+      "tipe pelanggaran": formData.violationType,
+      "Catatan Tambahan": formData.notes,
+      poin: hitungPoin(formData.violationType, formData.notes),
+    };
+  
+    const { error } = await supabase
+      .from("pelanggaran")
+      .update(updatedData)
+      .eq("id", violationToEdit.id);
+  
+    if (error) {
+      console.error("Gagal update:", error.message);
+      alert("Gagal menyimpan perubahan.");
+    } else {
+      alert("Pelanggaran berhasil diperbarui.");
+      setShowEditModal(false);
+      fetchData(); // pastikan fungsi ini ada untuk reload data pelanggaran
+    }
+  };
+  
+  
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -173,6 +212,10 @@ const Monitoring = () => {
       setViolationToDelete(null);
     }
   };
+
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [violationToEdit, setViolationToEdit] = useState<any>(null); // Store violation data here
+
 
   const filteredData = data.filter((item) => {
     const matchNama = item.student
@@ -397,13 +440,16 @@ const Monitoring = () => {
                             <div key={v.id} className="flex gap-2 mb-1">
                               {' '}
                               {/* ✅ Flex row untuk setiap set tombol */}
+                              {/* Button Edit */}
                               <Button
                                 variant="outline"
                                 size="sm"
                                 className="rounded-md" // ✅ Tambah rounded-md
-                                onClick={() =>
-                                  navigate(`/dashboard/edit-violation/${v.id}`)
-                                }
+                                onClick={() => {
+                                  setViolationToEdit(v); // Pass the current violation object
+                                  setShowEditModal(true);
+                                }}
+                                
                               >
                                 Edit
                               </Button>
@@ -427,6 +473,75 @@ const Monitoring = () => {
           )}
         </CardContent>
       </Card>
+
+      <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
+        <DialogContent>
+          <DialogHeader>Edit Pelanggaran</DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="violationType">Tipe Pelanggaran</Label>
+              <Select
+                value={formData.violationType}
+                onValueChange={(value) => {
+                  setViolationToEdit((prev: any) => ({
+                    ...prev,
+                    tipe: value,
+                  }));
+                  setFormData((prev) => ({
+                    ...prev,
+                    violationType: value,
+                    notes: '',
+                  }));
+                  setViolationDetails(Object.keys(pelanggaran[value] || {}));
+                  }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Pilih tipe pelanggaran" />
+                </SelectTrigger>
+                <SelectContent>
+                  {tipePelanggaran.map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {violationDetails.length >= 0 && (
+              <div>
+                <Label htmlFor="notes">Catatan</Label>
+                <Select
+                  value={formData.notes}
+                  onValueChange={(val) =>
+                    setFormData((prev) => ({ ...prev, notes: val }))
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Pilih catatan pelanggaran" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {violationDetails.map((note) => (
+                      <SelectItem key={note} value={note}>
+                        {note}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            {formData.violationType && formData.notes && (
+              <p className="text-sm text-muted-foreground">
+                Poin: {pelanggaran[formData.violationType]?.[formData.notes] || 0}
+              </p>
+            )}
+
+            <Button onClick={handleEdit}>Simpan</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
 
       {/* ✅ Modal Konfirmasi Hapus */}
       <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
