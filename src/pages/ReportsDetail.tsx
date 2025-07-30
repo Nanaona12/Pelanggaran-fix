@@ -48,8 +48,8 @@ const ReportsDetail: React.FC<Props> = ({ data, bulan, tahun }) => {
           <tr key={pelanggaran.id}>
             <td className="border px-2 py-1 text-center">{index + 1}</td>
             <td className="border px-2 py-1 text-center">{pelanggaran.nis}</td>
-            <td className="border px-2 py-1">{pelanggaran.siswa?.nama || '-'}</td>
-            <td className="border px-2 py-1">{pelanggaran.siswa?.kelas || '-'}</td>
+            <td className="border px-2 py-1">{pelanggaran.nama || '-'}</td>
+            <td className="border px-2 py-1">{pelanggaran.kelas || '-'}</td>
             <td className="border px-2 py-1">{pelanggaran.tipe_pelanggaran}</td>
             <td className="border px-2 py-1">{pelanggaran.catatan_tambahan}</td>
             <td className="border px-2 py-1 text-center">{pelanggaran.poin}</td>
