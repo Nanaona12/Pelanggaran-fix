@@ -3,18 +3,17 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  
   "scripts": {
-  "dev": "vite",
-  "build": "vite build",
-  "build:dev": "vite build --mode development",
-  "preview": "vite preview",
-  "lint": "eslint .",
-  "predeploy": "npm run build",
-  "deploy": "gh-pages -d dist",
-  "clean": "rimraf node_modules gh-pages .cache"
-},
-"homepage": "https://Nanaona12.github.io/Pelanggaran-fix/",
+    "dev": "vite",
+    "build": "vite build",
+    "build:dev": "vite build --mode development",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
+    "clean": "rimraf node_modules gh-pages .cache"
+  },
+  "homepage": "https://Nanaona12.github.io/Pelanggaran-fix/",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",

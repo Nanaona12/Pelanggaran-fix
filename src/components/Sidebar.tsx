@@ -55,10 +55,14 @@ const allNavigationItems = [
   },
 ];
 
-const Sidebar = () => {
+
+const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const location = useLocation();
   const { user, role, loading: authLoading } = useAuth();
-  const sidebarClasses = 'hidden md:flex md:w-64 md:flex-col flex-shrink-0';
+  const sidebarClasses = cn(
+    'fixed z-40 inset-y-0 left-0 w-64 bg-white border-r border-slate-200 transform transition-transform duration-200 ease-in-out md:relative md:translate-x-0',
+    isOpen ? 'translate-x-0' : '-translate-x-full',
+  );
   const contentWrapperClasses =
     'flex flex-col flex-grow pt-5 overflow-y-auto bg-white border-r border-slate-200';
   const logoWrapperClasses = 'flex items-center flex-shrink-0 px-6';

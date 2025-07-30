@@ -4,21 +4,24 @@ import {
   Menu,
   MenuItem,
   IconButton,
-  Tooltip, // ✅ Tooltip dari @mui/material
+  Tooltip,
   Divider,
   ListItemIcon,
 } from '@mui/material';
 import { Settings, Logout } from '@mui/icons-material';
 import { Bell, Search, User as UserIcon } from 'lucide-react'; // ✅ Import UserIcon dari lucide-react
-
-import { supabase } from '../supabaseClient'; // Pastikan path ini sesuai
-
+import { Input } from '@/components/ui/input';
+import { supabase } from '../supabaseClient';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 
-const TopBar = () => {
+// ✅ Tambahkan tipe props
+type TopBarProps = {
+  onMenuClick: () => void;
+};
+
+const TopBar: React.FC<TopBarProps> = ({ onMenuClick }) => {
   const { user, role, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
@@ -36,6 +39,7 @@ const TopBar = () => {
   const handleLogout = async () => {
     handleCloseProfile();
     await supabase.auth.signOut();
+    navigate('/login');
   };
 
   if (authLoading) {
@@ -59,24 +63,43 @@ const TopBar = () => {
   return (
     <header className="bg-white border-b border-slate-200 px-6 py-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          {/* <div className="relative w-96">
+        
+        {/* ✅ Gunakan prop onMenuClick */}
+        <Button
+          variant="ghost"
+          className="md:hidden mr-2"
+          onClick={onMenuClick}
+        >
+          <svg
+            className="w-6 h-6 text-slate-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </Button>
+
+        <div className="relative w-96">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
             <Input
               placeholder="Cari pelanggaran, siswa..."
               className="pl-10 bg-slate-50 border-slate-200 rounded-md"
             />
-          </div> */}
-        </div>
-
+          </div>
         <div className="flex items-center space-x-4">
+          
           <Button variant="ghost" size="sm" className="relative rounded-md">
             <Bell className="w-5 h-5 text-slate-600" />
-            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs"></span>
+            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs" />
           </Button>
 
           <Tooltip title="Pengaturan Akun">
-            {/* ✅ Perbaikan di sini: Bungkus IconButton dengan <span> */}
             <span style={{ display: 'inline-block' }}>
               <IconButton
                 onClick={handleOpenProfile}
@@ -92,9 +115,7 @@ const TopBar = () => {
                     alt={user.email || 'User'}
                   />
                   <AvatarFallback>
-                    {user.email
-                      ? user.email.substring(0, 2).toUpperCase()
-                      : 'U'}
+                    {user.email ? user.email.substring(0, 2).toUpperCase() : 'U'}
                   </AvatarFallback>
                 </Avatar>
               </IconButton>
@@ -159,7 +180,14 @@ const TopBar = () => {
             <Link
               to="/dashboard/profile"
               style={{ textDecoration: 'none', color: 'inherit' }}
-            ></Link>
+            >
+              <MenuItem>
+                <ListItemIcon>
+                  <Settings fontSize="small" />
+                </ListItemIcon>
+                Profile
+              </MenuItem>
+            </Link>
 
             <MenuItem onClick={handleLogout}>
               <ListItemIcon>
