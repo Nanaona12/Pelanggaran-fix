@@ -60,13 +60,13 @@ const TopBar = () => {
     <header className="bg-white border-b border-slate-200 px-6 py-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <div className="relative w-96">
+          {/* <div className="relative w-96">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
             <Input
               placeholder="Cari pelanggaran, siswa..."
               className="pl-10 bg-slate-50 border-slate-200 rounded-md"
             />
-          </div>
+          </div> */}
         </div>
 
         <div className="flex items-center space-x-4">

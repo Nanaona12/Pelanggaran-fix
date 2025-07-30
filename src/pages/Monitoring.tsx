@@ -88,30 +88,28 @@ const Monitoring = () => {
   });
 
   const handleEdit = async () => {
-    if (!violationToEdit) return;
-  
-    const updatedData = {
-      "tipe pelanggaran": formData.violationType,
-      "Catatan Tambahan": formData.notes,
-      poin: hitungPoin(formData.violationType, formData.notes),
-    };
-  
-    const { error } = await supabase
-      .from("pelanggaran")
-      .update(updatedData)
-      .eq("id", violationToEdit.id);
-  
-    if (error) {
-      console.error("Gagal update:", error.message);
-      alert("Gagal menyimpan perubahan.");
-    } else {
-      alert("Pelanggaran berhasil diperbarui.");
-      setShowEditModal(false);
-      fetchData(); // pastikan fungsi ini ada untuk reload data pelanggaran
-    }
+  if (!violationToEdit) return;
+
+  const updatedData = {
+    "tipe pelanggaran": formData.violationType,
+    "Catatan Tambahan": formData.notes,
+    poin: hitungPoin(formData.violationType, formData.notes),
   };
-  
-  
+
+  const { error } = await supabase
+    .from("pelanggaran")
+    .update(updatedData)
+    .eq("id", violationToEdit.id);
+
+  if (error) {
+    console.error("Gagal update:", error.message);
+    alert("Gagal menyimpan perubahan.");
+  } else {
+    alert("Pelanggaran berhasil diperbarui.");
+    setShowEditModal(false);
+    fetchData(); // pastikan fungsi ini ada untuk reload data pelanggaran
+  }
+};  
 
   const fetchData = useCallback(async () => {
     setLoading(true);
