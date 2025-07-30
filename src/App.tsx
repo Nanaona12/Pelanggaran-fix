@@ -94,7 +94,7 @@ function App() {
               {' '}
               {/* Definisi semua rute */}
               {/* Redirect dari root '/' ke '/dashboard' */}
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/" element={<Navigate to="/login" replace />} />
               {/* Rute untuk halaman Login (tidak dilindungi) */}
               <Route path="/login" element={<LoginPage />} />
               {/* Rute perantara '/dashboard' yang akan mengarahkan user ke dashboard spesifik role */}

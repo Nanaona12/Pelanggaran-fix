@@ -608,6 +608,9 @@ const ReportsContentForPDF: React.FC<ReportsContentForPDFProps> = ({
                   Tanggal
                 </th>
                 <th className="border border-gray-300 p-2 text-left">
+                  NIS
+                </th>
+                <th className="border border-gray-300 p-2 text-left">
                   Nama Siswa
                 </th>
                 <th className="border border-gray-300 p-2 text-left">Kelas</th>
@@ -626,6 +629,9 @@ const ReportsContentForPDF: React.FC<ReportsContentForPDFProps> = ({
                   <td className="border border-gray-300 p-2">
                     {new Date(item.tanggal).toLocaleDateString('id-ID')}
                   </td>
+                  <td className="border border-gray-300 p-2">
+                    {item.nis}
+                  </td>{' '}
                   <td className="border border-gray-300 p-2">
                     {item.siswa && item.siswa.length > 0
                       ? item.siswa[0].nama

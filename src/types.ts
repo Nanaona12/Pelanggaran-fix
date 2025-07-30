@@ -8,11 +8,7 @@ export type Pelanggaran = {
     nis: string;
     nama: string;
     kelas: string;
-    siswa?: {
-        nama: string;
-        kelas: string;
-        tingkat: string;
-    };
+    tingkat: string;
   };
 
 
